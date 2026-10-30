@@ -1,0 +1,31 @@
+{
+  "_comment": "Only the names below can be opened by JARVIS. Apps map a name to a program (searched on PATH or Windows App Paths) plus optional arguments. Websites must be https URLs.",
+  "apps": {
+    "notepad": ["notepad.exe"],
+    "calculator": ["calc.exe"],
+    "paint": ["mspaint.exe"],
+    "file explorer": ["explorer.exe"],
+    "task manager": ["taskmgr.exe"],
+    "command prompt": ["cmd.exe"],
+    "vs code": ["code"],
+    "chrome": ["chrome.exe"],
+    "edge": ["msedge.exe"],
+    "spotify": ["spotify.exe"]
+  },
+  "websites": {
+    "google": "https://www.google.com",
+    "youtube": "https://www.youtube.com",
+    "github": "https://github.com",
+    "gmail": "https://mail.google.com",
+    "openrouter": "https://openrouter.ai",
+    "supabase": "https://supabase.com/dashboard",
+    "elevenlabs": "https://elevenlabs.io/app",
+    "wikipedia": "https://www.wikipedia.org",
+    "stack overflow": "https://stackoverflow.com"
+  },
+  "search_engines": {
+    "google": "https://www.google.com/search?q=",
+    "youtube": "https://www.youtube.com/results?search_query=",
+    "wikipedia": "https://en.wikipedia.org/w/index.php?search="
+  }
+}

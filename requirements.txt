@@ -1,0 +1,33 @@
+# Tested together on Windows 11, Python 3.15.0 (2026-10-29).
+# Install: python -m venv .venv && .venv\Scripts\python -m pip install -r requirements.txt
+
+# LLM (OpenRouter through the OpenAI SDK)
+openai==3.41.0
+httpx==0.28.1
+
+# Configuration
+python-dotenv==1.2.4
+
+# Persistent memory (Supabase)
+supabase==2.33.0
+postgrest==2.33.0
+
+# HUD server
+fastapi==0.162.0
+uvicorn==0.54.0
+websockets==15.0.1
+
+# PC tools
+psutil==7.2.2
+pyperclip==1.11.0
+pypdf==6.21.4
+
+# Voice (speech-to-text is ElevenLabs over HTTPS; these are for mic + offline TTS)
+numpy==2.5.4
+sounddevice==0.5.6
+pyttsx3==2.99
+comtypes==1.4.17
+pywin32==312
+
+# Tests
+pytest==9.2.0

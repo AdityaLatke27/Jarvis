@@ -1,0 +1,38 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# JARVIS runtime data (reminders, tasks, logs, recordings, TTS cache)
+data/
+logs/
+workspace/
+*.wav
+*.mp3
+*.webm
+*.log
+
+# HUD frontend
+hud/node_modules/
+hud/dist/
+
+# Large model weights
+*.bin
+*.onnx
+*.gguf
+*.safetensors
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JARVIS · Holographic Interface</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='11' fill='none' stroke='%23ffb547' stroke-width='2'/><circle cx='16' cy='16' r='4' fill='%23fff1cf'/></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="booting">
+    <canvas id="scene"></canvas>
+
+    <!-- ============ HUD overlay ============ -->
+    <div id="hud">
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+
+      <header class="top">
+        <div class="brand">
+          <div class="logo">JARVIS</div>
+          <div class="sub">PERSONAL ASSISTANT <span>// HOLOGRAPHIC INTERFACE</span></div>
+        </div>
+        <div class="top-center">
+          <div class="seg" id="seg-level"></div>
+          <div class="ticker">
+            <span id="ticker-text">
+              SYS.NOMINAL &nbsp;◆&nbsp; CORE STABLE &nbsp;◆&nbsp; HOLD SPACE TO TALK &nbsp;◆&nbsp; TYPE BELOW TO CHAT
+              &nbsp;◆&nbsp; ESC STOPS SPEECH &nbsp;◆&nbsp; UPLINK LOCAL 127.0.0.1
+            </span>
+          </div>
+        </div>
+        <div class="top-right">
+          <div class="clock" id="clock">00:00:00</div>
+          <div class="date" id="date">----.--.--</div>
+        </div>
+      </header>
+
+      <aside class="panel left">
+        <div class="ptitle"><span>01</span>SYSTEM LINK</div>
+        <dl class="readouts">
+          <div><dt>BACKEND</dt><dd id="r-link">OFFLINE</dd></div>
+          <div><dt>MODEL</dt><dd id="r-model">—</dd></div>
+          <div><dt>MEMORY</dt><dd id="r-memory">—</dd></div>
+          <div><dt>VOICE IN</dt><dd id="r-stt">—</dd></div>
+          <div><dt>VOICE OUT</dt><dd id="r-tts">—</dd></div>
+          <div><dt>TOOLS</dt><dd id="r-tools">—</dd></div>
+          <div><dt>REMINDERS</dt><dd id="r-reminders">—</dd></div>
+        </dl>
+        <div class="ptitle"><span>02</span>EVENT LOG</div>
+        <div class="log" id="log"></div>
+      </aside>
+
+      <aside class="panel right">
+        <div class="ptitle"><span>03</span>SPECTRAL ANALYSIS</div>
+        <canvas class="mini" id="c-spec" width="440" height="140"></canvas>
+        <div class="meters">
+          <div class="meter"><label>BASS</label><i><b id="m-bass"></b></i><em id="v-bass">0</em></div>
+          <div class="meter"><label>MID</label><i><b id="m-mid"></b></i><em id="v-mid">0</em></div>
+          <div class="meter"><label>TREBLE</label><i><b id="m-treble"></b></i><em id="v-treble">0</em></div>
+        </div>
+        <div class="ptitle"><span>04</span>WAVEFORM</div>
+        <canvas class="mini" id="c-wave" width="440" height="100"></canvas>
+        <div class="ptitle"><span>05</span>DIAGNOSTICS</div>
+        <dl class="readouts">
+          <div><dt>SIGNAL</dt><dd id="r-db">-∞ dB</dd></div>
+          <div><dt>INPUT GAIN</dt><dd id="r-gain">1.00x</dd></div>
+          <div><dt>AZIMUTH</dt><dd id="r-az">000.0°</dd></div>
+          <div><dt>FRAME RATE</dt><dd id="r-fps">60</dd></div>
+        </dl>
+      </aside>
+
+      <!-- conversation -->
+      <section class="dialog" id="dialog">
+        <div class="line user" id="said-user"></div>
+        <div class="line jarvis" id="said-jarvis"></div>
+        <div class="line actions" id="said-actions"></div>
+      </section>
+
+      <footer class="bottom">
+        <div class="sources">
+          <button id="btn-talk" class="talk" title="Hold to talk (or hold Space)">HOLD TO TALK</button>
+          <button id="btn-stop" title="Stop speaking (Esc)">STOP</button>
+          <div class="status" id="status"><i></i><span id="status-text">STANDBY</span></div>
+        </div>
+        <form class="ask" id="ask">
+          <input id="ask-input" type="text" autocomplete="off" maxlength="4000" placeholder="TYPE A MESSAGE FOR JARVIS…" />
+          <button type="submit">SEND</button>
+        </form>
+        <div class="hints">
+          <b>SPACE</b> TALK &nbsp; <b>ESC</b> STOP &nbsp; <b>/</b> TYPE &nbsp; <b>H</b> HUD &nbsp; <b>F</b> FULL
+        </div>
+      </footer>
+    </div>
+
+    <!-- ============ approval dialog ============ -->
+    <div id="approval" class="modal">
+      <div class="modal-card">
+        <div class="ptitle"><span>!!</span>APPROVAL REQUIRED</div>
+        <div class="approval-tool" id="approval-tool"></div>
+        <pre class="approval-preview" id="approval-preview"></pre>
+        <div class="modal-actions">
+          <button id="approval-yes">APPROVE</button>
+          <button id="approval-no" class="ghost">DENY</button>
+        </div>
+        <div class="boot-hint">Y = APPROVE &nbsp; N / ESC = DENY</div>
+      </div>
+    </div>
+
+    <!-- ============ cursor reticle ============ -->
+    <div id="reticle">
+      <svg viewBox="-48 -48 96 96">
+        <g class="r-ring">
+          <circle r="20" />
+          <circle r="2" class="r-dot" />
+          <path d="M-30 0 H-24 M24 0 H30 M0 -30 V-24 M0 24 V30" />
+        </g>
+        <g class="r-spin">
+          <path d="M0 -34 A34 34 0 0 1 34 0" />
+          <path d="M0 34 A34 34 0 0 1 -34 0" />
+        </g>
+      </svg>
+      <div class="r-label">
+        <span id="ret-x">X 0.000</span>
+        <span id="ret-y">Y 0.000</span>
+        <span id="ret-state">SCAN</span>
+      </div>
+    </div>
+
+    <!-- ============ boot screen ============ -->
+    <div id="boot">
+      <div class="boot-card">
+        <div class="boot-title">JARVIS</div>
+        <div class="boot-sub">HOLOGRAPHIC INTERFACE</div>
+        <pre class="boot-log" id="boot-log"></pre>
+        <div class="boot-actions">
+          <button data-src="mic">ACTIVATE MICROPHONE</button>
+          <button data-src="none" class="ghost">TEXT ONLY</button>
+        </div>
+        <div class="boot-hint">THE MICROPHONE IS ANALYZED LOCALLY; AUDIO IS SENT ONLY WHILE YOU HOLD TO TALK</div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
